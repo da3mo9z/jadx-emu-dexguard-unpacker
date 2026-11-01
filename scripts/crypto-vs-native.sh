@@ -5,8 +5,8 @@
 #
 # HEURISTIC, not proof. It reports which crypto SURFACES are present (string refs in the DEX, symbols in
 # the .so); it does NOT prove which one the actual decrypt path uses. Read it as:
-#   javax.crypto present -> the unidbg-FREE CryptoCapture path is worth a run (nativeBackend=none)
-#   native-only          -> the decryptor is in a .so: use the unidbg backend or on-device hooking; CryptoCapture won't see it
+#   javax.crypto present -> the CryptoCapture path is worth a run (nativeBackend=none)
+#   native-only          -> the decryptor is in a .so, so CryptoCapture won't see it; look at it on a device or in a native emulator
 # Confirm the real path in jadx/IDA before committing.
 set -u
 command -v unzip >/dev/null || { echo "need: unzip" >&2; exit 1; }
@@ -56,7 +56,7 @@ scan_apk() {
   elif [ "$jc" -gt 0 ]; then
     v="BOTH surfaces present -> try CryptoCapture first; the decrypt MAY still be native"
   elif [ "$ncrypto" -gt 0 ] || { [ "$nso" -gt 0 ] && [ "$ll" -gt 0 ]; }; then
-    v="LIKELY native        -> CryptoCapture can't see it; use the unidbg backend or on-device hooking of the .so"
+    v="LIKELY native        -> CryptoCapture can't see it; the decryptor is in the .so (hook it on a device or use a native emulator)"
   else
     v="INCONCLUSIVE         -> no obvious crypto surface; inspect in jadx/IDA"
   fi
@@ -73,4 +73,4 @@ for arg in "$@"; do
 done
 echo
 echo "Heuristic: string/symbol presence != the decrypt path. 'javax.crypto' => CryptoCapture is worth a run;"
-echo "'native' => the decryptor is in a .so (unidbg / on-device hooking). Verify the real path in jadx/IDA."
+echo "'native' => the decryptor is in a .so (on-device hooking or a native emulator). Verify the real path in jadx/IDA."

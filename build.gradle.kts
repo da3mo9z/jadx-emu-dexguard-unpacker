@@ -6,9 +6,8 @@ plugins {
 
 version = System.getenv("VERSION") ?: "2.1.0"
 
-// The jadx-emu this release is built and tested against: upstream's rewritten Hooks API (commit ba65619) plus the
-// return-value ("after") hook seam. Resolved from mavenLocal - build and publish it first with scripts/deploy-engine.sh.
-// The 1.x extension line (v1.0.x) needs the previous engine (0.1.0-beta.6); the two are not interchangeable.
+// Built against io.github.flyphantomfly:jadx-emu, resolved from ~/.m2 (scripts/deploy-engine.sh publishes it there).
+// Set EMU_VERSION if the engine you published has a different version.
 val emuVersion = System.getenv("EMU_VERSION") ?: "0.2.0"
 
 repositories {

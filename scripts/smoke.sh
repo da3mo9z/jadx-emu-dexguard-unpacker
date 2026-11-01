@@ -35,8 +35,8 @@ else
   echo "SMOKE: FAIL - no byte-identical recovery. Last relevant log lines:"
   grep -E 'ERROR|Exception|NoClassDef|NoSuchMethod|failed to init|extension\(s\) found|auto-sweep' "$log" | tail -12 | sed 's/^/  /'
   if grep -q 'NoSuchMethodError' "$log"; then
-    echo "  hint: NoSuchMethodError at init = the extension and engine are on different lines (2.x needs jadx-emu 0.1.0-beta.6-fp1,"
-    echo "        1.x needs 0.1.0-beta.6). See TESTING.md 'Engine prerequisite'; run scripts/deploy-engine.sh on the matching engine."
+    echo "  hint: a NoSuchMethodError at init means the extension was built against a different jadx-emu than the one installed."
+    echo "        Run scripts/deploy-engine.sh on your jadx-emu checkout, then scripts/deploy.sh."
   fi
   echo "  full log: $log"
   exit 1
